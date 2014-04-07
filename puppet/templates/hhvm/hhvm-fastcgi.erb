@@ -1,0 +1,7 @@
+description "HHVM FastCGI"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+respawn
+
+exec su - www-data -c '/usr/bin/hhvm -c /etc/hhvm/server.hdf --mode daemon -vServer.Type=fastcgi -vServer.Port=9080'
