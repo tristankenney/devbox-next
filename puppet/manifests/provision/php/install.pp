@@ -3,10 +3,10 @@
 #
 class provision::php::install
 {
-
-  apt::ppa { "ppa:ondrej/php5":
-    before => Class['php'],
-  }
+  # PHP 5.5 repo
+  # apt::ppa { "ppa:ondrej/php5":
+  #   before => Class['php'],
+  # }
 
   class { "php": }
   class { "php::fpm": }

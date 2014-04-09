@@ -33,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     puppet.manifests_path    = "puppet/manifests"
     puppet.manifest_file     = "bootstrap.pp"
     puppet.hiera_config_path = "puppet/hiera.yaml"
-    puppet.options = "--verbose --debug"
+    #puppet.options = "--verbose --debug"
   end
 
   # Provision the box according to the main provision manifest
@@ -43,6 +43,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     puppet.module_path       = "puppet/modules"
     puppet.manifest_file     = "provision.pp"
     puppet.hiera_config_path = "puppet/hiera.yaml"
-    puppet.options = "--verbose --debug"
+    #puppet.options = "--verbose --debug"
   end
 end

@@ -7,7 +7,7 @@ class provision::hhvm::service
     ensure     => running,
     enable     => true,
     require    => Package["hhvm"],
-    binary     => "/etc/init/hhvm-fastcgi.conf",
+    binary     => "/etc/init.d/hhvm-fastcgi",
     hasrestart => true,
     hasstatus  => true,
   }
@@ -23,7 +23,10 @@ class provision::hhvm::service
 
   file { "hhvm_init":
     ensure  => file,
-    path    => "/etc/init/hhvm-fastcgi.conf",
+    owner   => 'root',
+    group   => 'root',
+    mode    => 0777,
+    path    => "/etc/init.d/hhvm-fastcgi",
     source  => "${core::params::templates_dir}/hhvm/hhvm-fastcgi.erb",
     require => Package["hhvm"],
     before  => Service["hhvm-fastcgi"],

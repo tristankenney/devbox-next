@@ -37,9 +37,9 @@ class provision
           provision::hhvm::service
 
   # XHProf and XHProf.io
-  # include provision::xhprof::install,
-  #         provision::xhprof::database,
-  #         provision::xhprof::vhost
+  include provision::xhprof::install,
+          provision::xhprof::database,
+          provision::xhprof::vhost
 
   # Webgrind
   include provision::webgrind::install,
@@ -51,6 +51,10 @@ class provision
   }
 
   package { "curl":
+    ensure  => installed
+  }
+
+  package { "vim":
     ensure  => installed
   }
 }

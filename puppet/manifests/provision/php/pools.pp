@@ -4,6 +4,8 @@
 class provision::php::pools
 {
   php::fpm::pool { "www":
-    listen => $core::params::fpm_listen
+    listen => $core::params::fpm_listen,
+    user => 'vagrant',
+    group => 'vagrant'
   }
 }
