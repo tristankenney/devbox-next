@@ -31,6 +31,10 @@ class provision
   # rsyslog
   include provision::rsyslog::install
 
+  # redis
+  include provision::redis::install
+
+
 
   # HHVM and HHVM FastCGI
   include provision::hhvm::install,
@@ -57,4 +61,19 @@ class provision
   package { "vim":
     ensure  => installed
   }
+
+  package { "htop":
+    ensure  => installed
+  }
+
+  package { "memcached":
+    ensure  => installed
+  }
+
+  package { "mercurial":
+    ensure  => installed
+  }
+
+
+
 }

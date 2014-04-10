@@ -3,8 +3,8 @@
 #
 class provision::xhprof::install
 {
-  package { ["build-essential", "php5-common"]:
-    ensure => installed
+  package { "php5-common":
+    ensure  => installed
   }
 
   if ! defined(Package["php-pear"]) {

@@ -10,6 +10,7 @@ class provision::php::modules
     Class["php::fpm::service"]
   ]
 
+
   package { "php5-dev":
      ensure => present
   }
@@ -23,15 +24,32 @@ class provision::php::modules
     content => $php_ini_dir,
   }
 
-  php::module { "json":
-    notify  => $notify_services,
-    content => $php_ini_dir,
-    require => Package['php5-dev']
-  }
-
   php::module { "apc":
     package_prefix => "php-",
     notify         => $notify_services,
     content        => $php_ini_dir
   }
+
+  package { "libyaml-dev": }
+
+  # php::module { "beta":
+  #   package_prefix => "yaml-"
+  # }
+
+  # package { "symfony2/ClassLoader":
+  #    repository => "pear.symfony.com"
+  # }
+
+  # pear::package { "twig/Twig":
+  #    repository => "pear.twig-project.org"
+  # }
+
+  # pear::package { "doctrine/Doctrine-1.2.2":
+  #    repository => "pear.doctrine-project.org"
+  # }
+
+  # pear::package { "zend/Zend-1.7.8":
+  #    repository => "zend.googlecode.com/svn"
+  # }
+
 }

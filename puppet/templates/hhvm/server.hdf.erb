@@ -1,4 +1,4 @@
-PidFile = /var/run/hhvm/pid
+PidFile = /var/run/hhvm.pid
 
 Eval {
   Jit = true
@@ -17,6 +17,14 @@ Log {
       File = /var/log/hhvm/access.log
       Format = %h %l %u % t \"%r\" %>s %b
     }
+  }
+}
+
+Server {
+  IncludeSearchPaths {
+    php = /usr/share/php/
+    doctrine = /usr/share/php/Doctrine/lib/
+    sfYaml = /usr/share/php/Doctrine/lib/vendor/sfYaml/
   }
 }
 

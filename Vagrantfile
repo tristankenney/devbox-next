@@ -11,8 +11,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :private_network, ip: "192.168.33.10"
   config.vm.network :forwarded_port, host: 8080, guest: 80
   config.vm.network :forwarded_port, host: 8081, guest: 81
+  config.vm.network :forwarded_port, host: 3307, guest: 3306
   config.vm.synced_folder "/workspace", "/workspace"
   config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled"
+  config.ssh.password = "vagrant"
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "1024"]

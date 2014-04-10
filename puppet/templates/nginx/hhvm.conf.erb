@@ -1,6 +1,5 @@
 server {
   listen 81;
-  server_name $host;
   root        <%= @root %>/$host;
   index       <%= @index %>;
 
@@ -22,5 +21,6 @@ server {
     fastcgi_index <%= @index %>;
     fastcgi_pass  127.0.0.1:9080;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param SERVER_NAME $host;
   }
 }

@@ -7,7 +7,7 @@ case "$1" in
         /usr/bin/hhvm --config /etc/hhvm/server.hdf --user www-data --mode daemon -vServer.Port=9080 -vServer.Type=fastcgi
         ;;
   stop)
-        start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/hhvm/pid
+        start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/hhvm.pid
         ;;
 
   reload|force-reload|restart|try-restart)
