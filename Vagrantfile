@@ -9,11 +9,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
   config.vm.hostname = "devbox.luciditysoftware.com.au"
   config.vm.network :private_network, ip: "192.168.33.10"
-  config.vm.network :forwarded_port, host: 8080, guest: 80
-  config.vm.network :forwarded_port, host: 8081, guest: 81
+  config.vm.network :forwarded_port, host: 8080, guest: 81
+  config.vm.network :forwarded_port, host: 8081, guest: 82
   config.vm.network :forwarded_port, host: 3307, guest: 3306
   config.vm.synced_folder "/workspace", "/workspace",
     type: "nfs"
+  config.vm.synced_folder "/workspace", "/workspace-direct"
   config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled",
     type: "nfs"
   config.ssh.password = "vagrant"
@@ -28,10 +29,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :shell, :path => "bootstrap.sh"
-
-  # Set the Timezone to something useful
-  config.vm.provision :shell, :inline => "echo \"Australia/Melbourne\" | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata"
-
 
   # Bootstrap Puppet by updating guest packages and installing the required
   # Puppet modules using libraian-puppet

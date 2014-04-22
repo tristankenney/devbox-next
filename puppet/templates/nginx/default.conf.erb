@@ -1,13 +1,16 @@
 server {
-  listen 80;
-  root        <%= @root %>/$host;
-  index       <%= @index %>;
+  listen 81;
+  server_name ~^(?<domain>[^\.]+\.[^\.]+);
+  root        <%= @root %>/$domain;
+  index       <%= @index %> index.html;
 
   client_max_body_size 100M;
   fastcgi_read_timeout 1800;
 
   location / {
     try_files $uri $uri/ /<%= @index %>;
+    rewrite media/[^\/]+/(.+) /$1 break;
+    rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 break;
   }
 
   #send file causes issues for static files in VirtualBox
@@ -26,7 +29,7 @@ server {
     include       fastcgi_params;
     fastcgi_index <%= @index %>;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    fastcgi_param SERVER_NAME $host;
+    fastcgi_param SERVER_NAME $domain;
     fastcgi_pass  unix:/var/run/php5-fpm.sock;
   }
 
