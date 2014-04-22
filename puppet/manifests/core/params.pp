@@ -18,6 +18,7 @@ class core::params
   $dbpassword = "root"
   $dbconfig   = "/etc/.puppet.cnf"
 
+
   user { "www-data":
     groups     => 'vagrant'
   }

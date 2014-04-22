@@ -13,8 +13,7 @@ class provision::xhprof::install
 
   php::pecl::module { "xhprof":
     use_package     => 'false',
-    preferred_state => 'beta',
-    require         => [Package['php5-common'], Package['graphviz']]
+    preferred_state => 'beta'
   }
 
   file { "xhprof_ini":
