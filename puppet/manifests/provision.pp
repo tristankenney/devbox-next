@@ -1,7 +1,6 @@
 include provision
 
 import "./core/*", "./provision/**/*"
-
 # Class: provision
 #
 #
@@ -14,6 +13,7 @@ class provision
   # PHP and PHP-FPM
   include provision::php::install,
           provision::php::modules,
+          provision::php::pearpackages,
           provision::php::pools
 
   # Nginx

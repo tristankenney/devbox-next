@@ -7,49 +7,83 @@ class provision::php::modules
   $notify_services = [
     Service["nginx"],
     Service["hhvm-fastcgi"],
-    Class["php::fpm::service"]
+    Class['phpfpm::service']
   ]
 
 
   package { "php5-dev":
-     ensure => present
-  }
-
-  php::module { [ "cgi", "curl" ]:
-    notify => $notify_services
-  }
-
-  php::module { [ "gd", "mysql", "sqlite", "mcrypt", "memcache", "xdebug" ]:
-    notify  => $notify_services,
-    content => $php_ini_dir,
-  }
-
-  php::module { "apc":
-    package_prefix => "php-",
-    notify         => $notify_services,
-    content        => $php_ini_dir
+     ensure        => present
   }
 
   package { "libyaml-dev": }
 
-  # php::module { "beta":
-  #   package_prefix => "yaml-"
-  # }
+  php::module { [ "cgi", "curl" ]:
+    notify         => $notify_services,
+    require        => Class['php']
+  }
 
-  # package { "symfony2/ClassLoader":
-  #    repository => "pear.symfony.com"
-  # }
+  php::module { [ "gd", "mysql", "mcrypt", "memcache", "xdebug" ]:
+    notify         => $notify_services,
+    require        => [Class['php'], Package['libyaml-dev']]
+  }
 
-  # pear::package { "twig/Twig":
-  #    repository => "pear.twig-project.org"
-  # }
+  php::module { "apc":
+    module_prefix => "php-",
+    require        => Class['php']
+  }
 
-  # pear::package { "doctrine/Doctrine-1.2.2":
-  #    repository => "pear.doctrine-project.org"
-  # }
+  php::pecl::module { "yaml-beta":
+    require        => Package["libyaml-dev"],
+    use_package   => 'no'
+  }
 
-  # pear::package { "zend/Zend-1.7.8":
-  #    repository => "zend.googlecode.com/svn"
-  # }
+  file { "php_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/php.ini",
+    source  => "${core::params::templates_dir}/php/php.ini.erb"
+  } ->
+
+  file { "apc_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/apc.ini",
+    source  => "${core::params::templates_dir}/php/apc.ini.erb"
+  } ->
+
+  file { "gd_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/gd.ini",
+    source  => "${core::params::templates_dir}/php/gd.ini.erb"
+  } ->
+
+  file { "mcrypt_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/mcrypt.ini",
+    source  => "${core::params::templates_dir}/php/mcrypt.ini.erb"
+  } ->
+
+  file { "memcache_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/memcache.ini",
+    source  => "${core::params::templates_dir}/php/memcache.ini.erb"
+  } ->
+
+  file { "mysql_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/mysql.ini",
+    source  => "${core::params::templates_dir}/php/mysql.ini.erb"
+  } ->
+
+  file { "xdebug_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/xdebug.ini",
+    source  => "${core::params::templates_dir}/php/xdebug.ini.erb"
+  } ->
+
+  file { "yaml-beta_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/yaml-beta.ini",
+    source  => "${core::params::templates_dir}/php/yaml-beta.ini.erb",
+    notify  => $notify_services
+  }
 
 }

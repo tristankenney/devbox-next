@@ -2,3 +2,5 @@
 .tmp
 .vagrant
 *.lock
+
+npm-debug.log

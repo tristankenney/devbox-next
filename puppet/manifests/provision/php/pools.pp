@@ -3,9 +3,10 @@
 #
 class provision::php::pools
 {
-  php::fpm::pool { "www":
+
+  phpfpm::pool { 'user_bob':
     listen => $core::params::fpm_listen,
-    user => 'vagrant',
-    group => 'vagrant'
+    user   => 'vagrant',
+    group  => 'vagrant',
   }
 }

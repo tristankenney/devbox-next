@@ -7,28 +7,21 @@ class provision::xhprof::install
     ensure  => installed
   }
 
-  if ! defined(Package["php-pear"]) {
-    package { "php-pear":
-      ensure => installed
-    }
+  package { "graphviz":
+    ensure => installed
   }
 
-  exec { "xhprof_install":
-    command => "sudo pecl install xhprof-0.9.4",
-    creates => "/usr/share/php/xhprof_html",
-    require => [Package["build-essential"], Package["php-pear"]],
+  php::pecl::module { "xhprof":
+    use_package     => 'false',
+    preferred_state => 'beta',
+    require         => [Package['php5-common'], Package['graphviz']]
   }
 
   file { "xhprof_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/xhprof.ini",
     source  => "${core::params::templates_dir}/xhprof/xhprof.ini.erb",
-    require => Exec["xhprof_install"],
     notify  => $provision::php::modules::notify_services
-  }
-
-  package { "graphviz":
-    ensure => installed
   }
 
   vcsrepo { "/usr/share/xhprof.io":

@@ -12,20 +12,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, host: 8080, guest: 80
   config.vm.network :forwarded_port, host: 8081, guest: 81
   config.vm.network :forwarded_port, host: 3307, guest: 3306
-  config.vm.synced_folder "/workspace", "/workspace"
-  config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled"
+  config.vm.synced_folder "/workspace", "/workspace",
+    type: "nfs"
+  config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled",
+    type: "nfs"
   config.ssh.password = "vagrant"
 
   config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
     vb.customize ["modifyvm", :id, "--cpus", "4"]
-    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
     vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
     vb.customize ["modifyvm", :id, "--nestedpaging", "on"]
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 
   config.vm.provision :shell, :path => "bootstrap.sh"
+
+  # Set the Timezone to something useful
+  config.vm.provision :shell, :inline => "echo \"Australia/Melbourne\" | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata"
 
 
   # Bootstrap Puppet by updating guest packages and installing the required

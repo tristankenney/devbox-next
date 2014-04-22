@@ -3,5 +3,7 @@
 #
 class provision::rsyslog::install
 {
-  class { 'rsyslog::server': }
+  class{'rsyslog::client':
+    server         => '192.168.1.76'
+  }
 }
