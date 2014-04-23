@@ -47,10 +47,17 @@ devbox-next comes with the following PHP modules installed and enabled out-of-th
 2. Make sure you have both `/workspace` and `/srv/sites-enabled` available.
 
     `/workspace` needs to point to your Eclipse workspace directory.
-    `sudo ln -s /home/{myusername}/workspace /workspace` should get you started.
+        
+        sudo ln -s /home/{myusername}/workspace /workspace 
+    
+    should get you started.
 
     `/srv/sites-enabled/` is a directory containing symlinks that point to any web roots you'd like to serve.
-    For example, if you would like to serve `http://mysite.myname` that resides in `/workspace/mysite/path/to/webroot` you would use the command `sudo ln -s /workspace/mysite/path/to/webroot/ /srv/sites-enabled/mysite.myname`. You would then be able to view the page in your browser at http://mysite.myname:8080 (Web requests are served at 8080)
+    For example, if you would like to serve `http://mysite.myname` that resides in `/workspace/mysite/path/to/webroot` you would use the command 
+        
+        sudo ln -s /workspace/mysite/path/to/webroot/ /srv/sites-enabled/mysite.myname
+    
+    You would then be able to view the page in your browser at http://mysite.myname:8080 (Web requests are served at 8080)
 
 3. Clone this repo into your workspace, cd into the directory and issue `vagrant up`. You might want to grab a coffee as provisioning the box can take a little while.
 
