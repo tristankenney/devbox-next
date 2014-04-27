@@ -7,10 +7,11 @@ server {
   client_max_body_size 100M;
   fastcgi_read_timeout 1800;
 
+  rewrite media/[^\/]+/(.+) /$1 last;
+  rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 last;
+
   location / {
     try_files $uri $uri/ /<%= @index %>;
-    rewrite media/[^\/]+/(.+) /$1 break;
-    rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 break;
   }
 
   #send file causes issues for static files in VirtualBox
@@ -22,6 +23,14 @@ server {
     expires       max;
     log_not_found off;
     access_log    off;
+  }
+
+  location /api/v2/ {
+    include       fastcgi_params;
+    fastcgi_index <%= @index %>;
+    fastcgi_param SCRIPT_FILENAME "${document_root}/api/v2/${fastcgi_script_name}";
+    fastcgi_param SERVER_NAME $domain;
+    fastcgi_pass  unix:/var/run/php5-fpm.sock;
   }
 
   location ~ \.php$ {

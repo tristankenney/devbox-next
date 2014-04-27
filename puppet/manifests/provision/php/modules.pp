@@ -22,7 +22,7 @@ class provision::php::modules
     require        => Class['php']
   }
 
-  php::module { [ "gd", "mysql", "mcrypt", "memcache", "xdebug" ]:
+  php::module { [ "gd", "mysql", "mcrypt", "memcache", "xdebug", "json" ]:
     notify         => $notify_services,
     require        => [Class['php'], Package['libyaml-dev']]
   }
@@ -37,52 +37,66 @@ class provision::php::modules
     use_package   => 'no'
   }
 
+  file { "json_ini":
+    ensure  => file,
+    path    => "/etc/php5/conf.d/json.ini",
+    content => template("${core::params::templates_dir}/php/json.ini.erb"),
+    notify  => $notify_services
+  }
+
   file { "php_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/php.ini",
-    source  => "${core::params::templates_dir}/php/php.ini.erb"
-  } ->
+    content => template("${core::params::templates_dir}/php/php.ini.erb"),
+    notify  => $notify_services
+  }
 
   file { "apc_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/apc.ini",
-    source  => "${core::params::templates_dir}/php/apc.ini.erb"
-  } ->
+    content => template("${core::params::templates_dir}/php/apc.ini.erb"),
+    notify  => $notify_services
+  }
 
   file { "gd_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/gd.ini",
-    source  => "${core::params::templates_dir}/php/gd.ini.erb"
-  } ->
+    content => template("${core::params::templates_dir}/php/gd.ini.erb"),
+    notify  => $notify_services
+  }
 
   file { "mcrypt_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/mcrypt.ini",
-    source  => "${core::params::templates_dir}/php/mcrypt.ini.erb"
-  } ->
+    content => template("${core::params::templates_dir}/php/mcrypt.ini.erb"),
+    notify  => $notify_services
+  }
 
   file { "memcache_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/memcache.ini",
-    source  => "${core::params::templates_dir}/php/memcache.ini.erb"
-  } ->
+    content => template("${core::params::templates_dir}/php/memcache.ini.erb"),
+    notify  => $notify_services
+  }
 
   file { "mysql_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/mysql.ini",
-    source  => "${core::params::templates_dir}/php/mysql.ini.erb"
-  } ->
+    content => template("${core::params::templates_dir}/php/mysql.ini.erb"),
+    notify  => $notify_services
+  }
 
   file { "xdebug_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/xdebug.ini",
-    source  => "${core::params::templates_dir}/php/xdebug.ini.erb"
-  } ->
+    content => template("${core::params::templates_dir}/php/xdebug.ini.erb"),
+    notify  => $notify_services
+  }
 
   file { "yaml-beta_ini":
     ensure  => file,
     path    => "/etc/php5/conf.d/yaml-beta.ini",
-    source  => "${core::params::templates_dir}/php/yaml-beta.ini.erb",
+    content => template("${core::params::templates_dir}/php/yaml-beta.ini.erb"),
     notify  => $notify_services
   }
 

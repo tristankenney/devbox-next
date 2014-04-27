@@ -7,10 +7,11 @@ server {
   client_max_body_size 100M;
   fastcgi_read_timeout 1800;
 
+  rewrite media/[^\/]+/(.+) /$1 last;
+  rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 last;
+
   location / {
     try_files $uri $uri/ /<%= @index %>;
-    rewrite media/[^\/]+/(.+) /$1 break;
-    rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 break;
   }
 
   #send file causes issues for static files in VirtualBox
