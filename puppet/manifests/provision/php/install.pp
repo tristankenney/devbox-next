@@ -38,4 +38,15 @@ class provision::php::install
     require    => Exec['move fpm config']
   }
 
+  exec { 'move cli config':
+    command    => "mv /etc/php5/cli/conf.d /etc/php5/cli/conf.d.orig",
+    unless     => "[ -d /etc/php5/cli/conf.d.orig ]"
+  }
+
+  file { '/etc/php5/cli/conf.d':
+    ensure     => 'link',
+    target     => '/etc/php5/conf.d',
+    require    => Exec['move cli config']
+  }
+
 }

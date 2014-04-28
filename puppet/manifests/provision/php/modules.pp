@@ -22,7 +22,7 @@ class provision::php::modules
     require        => Class['php']
   }
 
-  php::module { [ "gd", "mysql", "mcrypt", "memcache", "xdebug", "json" ]:
+  php::module { [ "gd", "mysql", "mcrypt", "memcache", "xdebug", "json"]:
     notify         => $notify_services,
     require        => [Class['php'], Package['libyaml-dev']]
   }
