@@ -3,13 +3,17 @@
 #
 class bootstrap::modules
 {
+  package { "ruby-dev":
+    ensure   => installed
+  } ->
+
   package { "puppet":
     ensure   => installed,
     provider => "gem"
   } ->
 
   package { "facter":
-    ensure   => "1.6.13",
+    ensure   => "2.0.1",
     provider => "gem"
   } ->
 

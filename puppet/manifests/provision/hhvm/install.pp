@@ -3,13 +3,9 @@
 #
 class provision::hhvm::install
 {
-  apt::ppa { "ppa:mapnik/boost":
-    before      => Package["hhvm"]
-  }
-
   apt::source { "hhvm":
     location    => "http://dl.hhvm.com/ubuntu",
-    release     => "precise",
+    release     => "trusty",
     repos       => "main",
     include_src => false,
     key         => "hhvm",
