@@ -23,4 +23,10 @@ class provision::php::install
     unless     => "[ -f /usr/local/bin/composer ]"
   }
 
+  exec { 'composer phpunit':
+    command    => "composer global require \"phpunit/phpunit=4.0.*\"",
+    require    => Exec['global composer'],
+    unless     => "[ -f /usr/local/bin/composer ]"
+  }
+
 }

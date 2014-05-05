@@ -24,6 +24,18 @@ server {
     access_log    off;
   }
 
+  location /api/v2/ {
+    try_files /api/v2/$uri $uri/ /api/v2/index.php?$args;
+    include fastcgi_params;
+    fastcgi_pass  unix:/var/run/php5-fpm.sock;
+    fastcgi_split_path_info ^/api/v2/(.+\.php)(/.+)$;
+    fastcgi_intercept_errors on;
+    fastcgi_index <%= @index %>;
+    fastcgi_param SERVER_NAME $domain;
+    fastcgi_param PATH_INFO  $fastcgi_path_info;
+  }
+
+
   location ~ \.php$ {
     include       fastcgi_params;
     fastcgi_index <%= @index %>;

@@ -32,9 +32,11 @@ class provision::php::modules
     require        => Class['php']
   }
 
-  php::pecl::module { "yaml":
-    require        => Package["libyaml-dev"],
-    use_package   => 'no'
+  # make betterer
+  exec { "pecl install yaml":
+    require => [Class['php'], Package["libyaml-dev"]],
+    notify  => $notify_services,
+    unless  => '[ -f /usr/lib/php5/20121212/yaml.so ]'
   }
 
 
@@ -46,13 +48,6 @@ class provision::php::modules
     notify  => $notify_services
   }
 
-  file { "yaml_ini":
-    ensure  => file,
-    path    => "/etc/php5/mods-available/yaml.ini",
-    content => template("${core::params::templates_dir}/php/yaml.ini.erb"),
-    notify  => $notify_services
-  }
-
   file { "php_ini":
     ensure  => file,
     path    => "/etc/php5/mods-available/php.ini",
@@ -60,20 +55,9 @@ class provision::php::modules
     notify  => $notify_services
   }
 
+  exec { "php5enmod -s ALL yaml": }
 
-  file { "/etc/php5/cli/conf.d/20-yaml.ini":
-    ensure  => link,
-    target  => "/etc/php5/mods-available/yaml.ini",
-    notify  => $notify_services,
-    require => File['yaml_ini']
-  }
-
-  file { "/etc/php5/fpm/conf.d/20-yaml.ini":
-    ensure  => link,
-    target  => "/etc/php5/mods-available/yaml.ini",
-    notify  => $notify_services,
-    require => File['yaml_ini']
-  }
+  exec { "php5enmod -s ALL mcrypt": }
 
   file { "/etc/php5/cli/conf.d/1-php.ini":
     ensure  => link,
@@ -88,12 +72,5 @@ class provision::php::modules
     notify  => $notify_services,
     require => File['php_ini']
   }
-
-
-
-
-
-
-
 
 }
