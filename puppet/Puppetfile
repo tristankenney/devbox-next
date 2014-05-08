@@ -6,11 +6,17 @@ mod "apt",
 mod "ruby",
     :git => "git://github.com/puppetlabs/puppetlabs-ruby.git"
 
+mod "java",
+    :git => "git://github.com/puppetlabs/puppetlabs-java.git"
+
 mod "php",
     :git => "git://github.com/example42/puppet-php.git"
 
 mod "phpfpm",
     :git => "git://github.com/Slashbunny/puppet-phpfpm.git"
+
+mod "elasticsearch",
+    :git => "git://github.com/elasticsearch/puppet-elasticsearch.git"
 
 mod "nginx",
     :git => "git://github.com/davidwinter/puppet-nginx.git"

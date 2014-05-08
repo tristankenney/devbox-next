@@ -27,19 +27,12 @@ class provision::php::modules
     require        => [Class['php'], Package['libyaml-dev']]
   }
 
-  php::module { "apc":
-    module_prefix => "php-",
-    require        => Class['php']
-  }
-
   # make betterer
   exec { "pecl install yaml":
     require => [Class['php'], Package["libyaml-dev"]],
     notify  => $notify_services,
     unless  => '[ -f /usr/lib/php5/20121212/yaml.so ]'
   }
-
-
 
   file { "xdebug_ini":
     ensure  => file,

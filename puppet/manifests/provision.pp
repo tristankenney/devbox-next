@@ -21,6 +21,9 @@ class provision
   # mailcatcher
   include provision::mailcatcher::install
 
+  # phantomjs
+  include provision::phantomjs::install
+
   # Nginx
   include provision::nginx::install,
           provision::nginx::vhosts
@@ -37,6 +40,8 @@ class provision
   # redis
   include provision::redis::install
 
+  # elasticsearch
+  include provision::elasticsearch::install
 
 
   # HHVM and HHVM FastCGI

@@ -1,5 +1,5 @@
 server {
-  listen 82;
+  listen 8081;
   server_name ~^(?<domain>[^\.]+\.[^\.]+);
   root        <%= @root %>/$domain;
   index       <%= @index %> index.html;
@@ -19,6 +19,7 @@ server {
   sendfile off;
 
   location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+    try_files     $uri $uri/ /index.php?$args;
     expires       max;
     log_not_found off;
     access_log    off;

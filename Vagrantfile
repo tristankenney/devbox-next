@@ -9,8 +9,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "devbox.luciditysoftware.com.au"
   #config.vm.box_url = "https://vagrantcloud.com/ubuntu/trusty64/version/1/provider/virtualbox.box"
   config.vm.network :private_network, ip: "192.168.33.10"
-  config.vm.network :forwarded_port, host: 8080, guest: 81
-  config.vm.network :forwarded_port, host: 8081, guest: 82
+  config.vm.network :forwarded_port, host: 8080, guest: 8080
+  config.vm.network :forwarded_port, host: 8081, guest: 8081
   config.vm.network :forwarded_port, host: 33307, guest: 3306
   config.vm.synced_folder "/workspace", "/workspace",
     type: "nfs"
@@ -51,5 +51,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :shell, :path => "phpfpm.sh"
-
 end
