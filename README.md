@@ -46,36 +46,38 @@ devbox-next comes with latest Trusty Tahr-supported PHP 5.5 version, plus the fo
 * Doctrine 1.2.2
 * PHPUnit
 * Twig
-* composer 
+* composer
 
 
 ## Getting started
 
 1. Grab and install the appropriate version of [Vagrant] (http://www.vagrantup.com/downloads.html) for your distro.
 
+2. Install vagrant-vbguest plugin. This will ensure your guest additions stay up-to-date.
+		
+		$ vagrant plugin install vagrant-vbguest
+
+3. Create a symlink from your working files to `/workspace`. e.g.:
 
 
-2. Create a symlink from your working files to `/workspace`. e.g.:
+    	$ sudo ln -s /home/{myusername}/workspace /workspace
 
-       
-    	$ sudo ln -s /home/{myusername}/workspace /workspace 
+4. Create a folder of symlinks at `/srv/sites-enabled/` that point to web roots that reside your workspace, relative to `/workspace`. For example, if you would like to serve `http://mysite.myname` that resides in `/workspace/mysite/path/to/webroot` you would use the command
 
-3. Create a folder of symlinks at `/srv/sites-enabled/` that point to web roots that reside your workspace, relative to `/workspace`. For example, if you would like to serve `http://mysite.myname` that resides in `/workspace/mysite/path/to/webroot` you would use the command 
-        
         $ sudo ln -s /workspace/mysite/path/to/webroot/ /srv/sites-enabled/mysite.myname
-    
+
     You would then be able to view the page in your browser at http://mysite.myname:8080 (Web requests are served at 8080)
 
-4. Clone this repo
-	
+5. Clone this repo
+
 		$ git clone git@github.com:tristankenney/devbox-next.git
 		$ cd devbox-next
-		
-5. Add the Trusty box to Vagrant (this will take a while)
-		
+
+6. Add the Trusty box to Vagrant (this will take a while)
+
 		$ vagrant box add 'ubuntu/trusty64'
-		
-6. Provision the machine (this will also take a while)
+
+7. Provision the machine (this will also take a while)
 
 		$ vagrant up
 
@@ -100,7 +102,7 @@ XDebug requires a slightly more involved setup than you may be used to.
 
 #### Web app debugging
 
-Setup sites to be debugged as per normal (on port 8080). 
+Setup sites to be debugged as per normal (on port 8080).
 
 Anything you would like to be able to have breakpoints against will need to be [mapped within Eclipse](https://www.dropbox.com/s/y67lhzogssmfmbu/Screenshot%202014-04-22%2015.23.27.png)
 
@@ -121,17 +123,6 @@ To debug cli scripts, you will need [JIT debugging enabled within Eclipse](https
 ### Web server
 All sites symlinked above will be available at http://{url}:8080 for php-fpm and http://{url}:8081 for HHVM
 
-## Development
-
-Now that you are all setup it's time to develop.
-Because your workspace via the `/workspace` symlink along with you sites via `/srv/sites-enabled` you can develop as normal on your native machine. All changes are reflected on the Virtual Machine immediately.
-
-When you need direct access to the virtual machine, you can SSH into the Vagrant machine using one of the above commands, and access your files via `/workspace`. As this folder is mounted via NFS, you may occasionally run into file permission issues. If this is the case, you can perform the same operation in the folder `/workspace-direct` which is mounted directly.
-One notable instance of this is when using the `npm install`.
-
-NB: direct access is *much* slower than NFS mounted folders, and as such will have a noticeable impact on performance. As such it recommended to perform all operations using the `/workspace` folder where possible.
-
-If you care to read more about this fascinating subject, head over to 
 
 ## TODO
 

@@ -23,10 +23,17 @@ class provision::php::install
     unless     => "[ -f /usr/local/bin/composer ]"
   }
 
-  exec { 'composer phpunit':
-    command    => "composer global require \"phpunit/phpunit=4.0.*\"",
+  exec { 'install phpunit':
+    command    => "wget https://phar.phpunit.de/phpunit.phar && chmod +x phpunit.phar && mv phpunit.phar /usr/local/bin/phpunit",
     require    => Exec['global composer'],
-    unless     => "[ -f /usr/local/bin/composer ]"
+    unless     => "[ -f /usr/local/bin/phpunit ]"
   }
+
+  exec { 'install codecept':
+    command    => "wget http://codeception.com/codecept.phar && chmod +x codecept.phar && mv codecept.phar /usr/local/bin/codecept",
+    require    => Exec['global composer'],
+    unless     => "[ -f /usr/local/bin/codecept ]"
+  }
+
 
 }

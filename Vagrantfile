@@ -7,13 +7,15 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.hostname = "devbox.luciditysoftware.com.au"
-  #config.vm.box_url = "https://vagrantcloud.com/ubuntu/trusty64/version/1/provider/virtualbox.box"
   config.vm.network :private_network, ip: "192.168.33.10"
   config.vm.network :forwarded_port, host: 8080, guest: 8080
   config.vm.network :forwarded_port, host: 8081, guest: 8081
   config.vm.network :forwarded_port, host: 33307, guest: 3306
+  # As per https://gist.github.com/fideloper/dab171a2aa646e86b782#comment-973847
+  # set :mount_options => ['actimeo=2'] to workaround NFS slow-update issue
   config.vm.synced_folder "/workspace", "/workspace",
-    type: "nfs"
+    :nfs => true,
+    :mount_options => ['actimeo=2']
   config.vm.synced_folder "/workspace", "/workspace-direct"
   config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled",
     type: "nfs"
@@ -26,6 +28,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
     vb.customize ["modifyvm", :id, "--nestedpaging", "on"]
     #vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  end
+
+  Vagrant::Config.run do |config|
+    config.vbguest.auto_update = true
+    config.vbguest.no_remote = false
   end
 
   config.vm.provision :shell, :path => "bootstrap.sh"
@@ -50,5 +57,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #puppet.options = "--verbose --debug"
   end
 
-  config.vm.provision :shell, :path => "phpfpm.sh"
+  #config.vm.provision :shell, :path => "phpfpm.sh"
 end
