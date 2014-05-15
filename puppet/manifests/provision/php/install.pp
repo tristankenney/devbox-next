@@ -4,12 +4,9 @@
 class provision::php::install
 {
 
-  apt::ppa { 'ppa:ondrej/php5': }
-
   class { "php":
     service     => 'nginx',
-    config_file => '/etc/php5/fpm/php.ini',
-    require     => Apt::Ppa['ppa:ondrej/php5']
+    config_file => '/etc/php5/fpm/php.ini'
   }
 
   class { 'phpfpm': }
@@ -26,27 +23,17 @@ class provision::php::install
     unless     => "[ -f /usr/local/bin/composer ]"
   }
 
-
-  exec { 'move fpm config':
-    command    => "mv /etc/php5/fpm/conf.d /etc/php5/fpm/conf.d.orig",
-    unless     => "[ -d /etc/php5/fpm/conf.d.orig ]"
+  exec { 'install phpunit':
+    command    => "wget https://phar.phpunit.de/phpunit.phar && chmod +x phpunit.phar && mv phpunit.phar /usr/local/bin/phpunit",
+    require    => Exec['global composer'],
+    unless     => "[ -f /usr/local/bin/phpunit ]"
   }
 
-  file { '/etc/php5/fpm/conf.d':
-    ensure     => 'link',
-    target     => '/etc/php5/conf.d',
-    require    => Exec['move fpm config']
+  exec { 'install codecept':
+    command    => "wget http://codeception.com/codecept.phar && chmod +x codecept.phar && mv codecept.phar /usr/local/bin/codecept",
+    require    => Exec['global composer'],
+    unless     => "[ -f /usr/local/bin/codecept ]"
   }
 
-  exec { 'move cli config':
-    command    => "mv /etc/php5/cli/conf.d /etc/php5/cli/conf.d.orig",
-    unless     => "[ -d /etc/php5/cli/conf.d.orig ]"
-  }
-
-  file { '/etc/php5/cli/conf.d':
-    ensure     => 'link',
-    target     => '/etc/php5/conf.d',
-    require    => Exec['move cli config']
-  }
 
 }

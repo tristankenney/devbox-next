@@ -1,45 +1,47 @@
 server {
-  listen 81;
-  server_name ~^(?<domain>[^\.]+\.[^\.]+);
-  root        <%= @root %>/$domain;
-  index       <%= @index %> index.html;
+    listen 8080;
+    server_name ~^(?<domain>[^\.]+\.[^\.]+);
+    root        <%= @root %>/$domain;
+    index       <%= @index %> index.html;
 
-  client_max_body_size 100M;
-  fastcgi_read_timeout 1800;
+    client_max_body_size 100M;
+    fastcgi_read_timeout 1800;
 
-  rewrite media/[^\/]+/(.+) /$1 last;
-  rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 last;
-
-  location / {
-    try_files $uri $uri/ /<%= @index %>;
-  }
-
-  #send file causes issues for static files in VirtualBox
-  #http://jeremyfelt.com/code/2013/01/08/clear-nginx-cache-in-vagrant/
-  sendfile off;
+    rewrite media/[^\/]+/(.+) /$1 last;
+    rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 last;
 
 
-  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-    expires       max;
-    log_not_found off;
-    access_log    off;
-  }
+    #send file causes issues for static files in VirtualBox
+    #http://jeremyfelt.com/code/2013/01/08/clear-nginx-cache-in-vagrant/
+    sendfile off;
 
-  location /api/v2/ {
-    include       fastcgi_params;
-    fastcgi_index <%= @index %>;
-    fastcgi_param SCRIPT_FILENAME "${document_root}/api/v2/${fastcgi_script_name}";
-    fastcgi_param SERVER_NAME $domain;
-    fastcgi_pass  unix:/var/run/php5-fpm.sock;
-  }
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        try_files     $uri $uri/ /index.php?$query_string;
+        expires       max;
+        log_not_found off;
+        access_log    off;
+    }
 
-  location ~ \.php$ {
-    try_files     $uri =404;
-    include       fastcgi_params;
-    fastcgi_index <%= @index %>;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    fastcgi_param SERVER_NAME $domain;
-    fastcgi_pass  unix:/var/run/php5-fpm.sock;
-  }
+    location /api/v2/ {
+        try_files /api/v2/$uri $uri/ /api/v2/index.php?$args;
+        include fastcgi_params;
+        fastcgi_pass  unix:/var/run/php5-fpm.sock;
+        fastcgi_split_path_info ^/api/v2/(.+\.php)(/.+)$;
+        fastcgi_intercept_errors on;
+        fastcgi_index <%= @index %>;
+        fastcgi_param SERVER_NAME $domain;
+        fastcgi_param PATH_INFO  $fastcgi_path_info;
+    }
 
+    location / {
+        try_files $uri $uri/ /<%= @index %>?$query_string;
+        location = /index.php {
+            try_files     $uri /index.php?$query_string =404;
+            include       fastcgi_params;
+            fastcgi_index <%= @index %>;
+            fastcgi_pass  unix:/var/run/php5-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param SERVER_NAME $domain;
+        }
+    }
 }

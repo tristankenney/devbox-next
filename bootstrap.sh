@@ -16,4 +16,5 @@ sudo apt-get update
 sudo apt-get install --yes puppet
 
 #set timezone
+sudo locale-gen en_AU.UTF-8
 echo "Australia/Melbourne" | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata

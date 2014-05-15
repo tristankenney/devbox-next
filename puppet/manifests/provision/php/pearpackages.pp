@@ -4,10 +4,10 @@
 class provision::php::pearpackages
 {
 
-  php::pear::module { 'PHPUnit':
-    repository  => 'pear.phpunit.de',
-    use_package => 'no'
-  }
+  # php::pear::module { 'PHPUnit':
+  #   repository  => 'pear.phpunit.de',
+  #   use_package => 'no'
+  # }
 
   php::pear::module { "Twig":
      repository    => "pear.twig-project.org",

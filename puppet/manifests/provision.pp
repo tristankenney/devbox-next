@@ -10,11 +10,19 @@ class provision
 
   include apt
 
+  include provision::ruby::install
+
   # PHP and PHP-FPM
   include provision::php::install,
           provision::php::modules,
           provision::php::pearpackages,
           provision::php::pools
+
+  # mailcatcher
+  include provision::mailcatcher::install
+
+  # phantomjs
+  include provision::phantomjs::install
 
   # Nginx
   include provision::nginx::install,
@@ -28,12 +36,12 @@ class provision
   include provision::nodejs::install,
           provision::nodejs::packages
 
-  # rsyslog
-  include provision::rsyslog::install
 
   # redis
   include provision::redis::install
 
+  # elasticsearch
+  include provision::elasticsearch::install
 
 
   # HHVM and HHVM FastCGI
@@ -49,9 +57,9 @@ class provision
   include provision::webgrind::install,
           provision::webgrind::vhost
 
-  package { "phpmyadmin":
-    ensure  => installed,
-    require => Package["php5-cgi"]
+
+  package { 's3cmd':
+    ensure  => installed
   }
 
   package { "curl":

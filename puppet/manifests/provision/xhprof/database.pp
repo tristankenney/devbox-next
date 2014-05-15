@@ -17,6 +17,6 @@ class provision::xhprof::database
     timeout     => 0,
     refreshonly => true,
     require     => Vcsrepo["/usr/share/xhprof.io"],
-    subscribe   => mysql::db["xhprof"]
+    subscribe   => Mysql::Db["xhprof"]
   }
 }
