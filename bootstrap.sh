@@ -18,3 +18,10 @@ sudo apt-get install --yes puppet
 #set timezone
 sudo locale-gen en_AU.UTF-8
 echo "Australia/Melbourne" | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata
+
+# UseDNS no to prevent slow DNS lookups on SSH connection
+if grep --quiet 'UseDNS no' /etc/ssh/sshd_config
+then
+else
+    sudo bash -c "echo 'UseDNS no' >> /etc/ssh/sshd_config"
+fi
