@@ -48,10 +48,13 @@ class provision
   include provision::hhvm::install,
           provision::hhvm::service
 
+  # Selenium
+  include provision::selenium::install
+
   # XHProf and XHProf.io
-  # include provision::xhprof::install,
-  #         provision::xhprof::database,
-  #         provision::xhprof::vhost
+  include provision::xhprof::install,
+          provision::xhprof::database,
+          provision::xhprof::vhost
 
   # Webgrind
   include provision::webgrind::install,

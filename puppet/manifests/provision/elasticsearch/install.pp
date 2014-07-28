@@ -15,10 +15,15 @@ class provision::elasticsearch::install
                 'number_of_replicas' => '0',
                 'number_of_shards'   => '5'
             },
-                'network'            => {
+            'network'                => {
                 'host'               => $::ipaddress
             }
         },
         require => Class['java']
     }
+
+    exec { 'install attachment-mapper':
+        command    => '/usr/share/elasticsearch/bin/plugin '
+    }
+
 }

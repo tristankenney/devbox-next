@@ -22,6 +22,7 @@ echo "Australia/Melbourne" | sudo tee /etc/timezone && sudo dpkg-reconfigure --f
 # UseDNS no to prevent slow DNS lookups on SSH connection
 if grep --quiet 'UseDNS no' /etc/ssh/sshd_config
 then
+    echo 'DNS patched'
 else
     sudo bash -c "echo 'UseDNS no' >> /etc/ssh/sshd_config"
 fi
