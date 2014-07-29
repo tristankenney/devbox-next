@@ -6,9 +6,9 @@ DESC="Selenium server"
 RUN_AS=root
 JAVA_BIN=/usr/bin/java
 
-SELENIUM_DIR=<%= @selenium %>
+SELENIUM_DIR=/opt/selenium/
 PID_FILE="$SELENIUM_DIR/selenium.pid"
-JAR_FILE="$SELENIUM_DIR/selenium-server.jar"
+JAR_FILE="$SELENIUM_DIR/selenium-standalone.jar"
 LOG_FILE="$SELENIUM_DIR/selenium.log"
 
 MAX_MEMORY="-Xmx500m"

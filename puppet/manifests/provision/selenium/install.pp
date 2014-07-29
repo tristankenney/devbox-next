@@ -7,6 +7,9 @@ class provision::selenium::install
         ensure  => present
     }
 
+    package { "firefox":
+        ensure  => present
+    }
 
     file { "/opt/selenium":
         ensure  => directory
@@ -14,8 +17,22 @@ class provision::selenium::install
 
     file { "/etc/init.d/selenium":
        ensure  => file,
+       mode => 0770,
+       group => root,
        content => template("${core::params::templates_dir}/selenium/selenium.erb")
     }
+
+    file { "/etc/init.d/xvfb":
+       ensure  => file,
+       mode => 0770,
+       group => root,
+       content => template("${core::params::templates_dir}/selenium/xvfb.erb")
+    }
+
+    service { "xvfb":
+        ensure => running
+    }
+
 
     exec { 'install selenium':
        command    => "wget ${install_url} && chmod +x ${jar} && mv ${jar} /opt/selenium/selenium-standalone.jar",

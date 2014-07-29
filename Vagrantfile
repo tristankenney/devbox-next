@@ -12,6 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, host: 8081, guest: 8081
   config.vm.network :forwarded_port, host: 33307, guest: 3306
   config.vm.network :forwarded_port, host: 9200, guest: 9200
+  config.vm.network :forwarded_port, host: 4444, guest: 4444
   # As per https://gist.github.com/fideloper/dab171a2aa646e86b782#comment-973847
   # set :mount_options => ['actimeo=2'] to workaround NFS slow-update issue
   # workspace, mounted via NFS with a short cache time
