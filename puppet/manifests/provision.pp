@@ -48,6 +48,9 @@ class provision
   include provision::hhvm::install,
           provision::hhvm::service
 
+  # Selenium
+  include provision::selenium::install
+
   # XHProf and XHProf.io
   # include provision::xhprof::install,
   #         provision::xhprof::database,

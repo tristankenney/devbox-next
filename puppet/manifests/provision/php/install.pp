@@ -35,5 +35,10 @@ class provision::php::install
     unless     => "[ -f /usr/local/bin/codecept ]"
   }
 
+  file { '/home/vagrant/.bash_aliases':
+    ensure  => file,
+    content => template("${core::params::templates_dir}/.bash_aliases.erb")
+  }
+
 
 }
