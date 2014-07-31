@@ -48,7 +48,17 @@ class provision::php::modules
     notify  => $notify_services
   }
 
-  exec { "php5enmod -s ALL yaml": }
+  file { "yaml_ini":
+    ensure  => file,
+    path    => "/etc/php5/mods-available/yaml.ini",
+    content => template("${core::params::templates_dir}/php/yaml.ini.erb"),
+    notify  => $notify_services
+  }
+
+  exec { "php5enmod -s ALL yaml":
+    require => File['yaml_ini'],
+    notify  => $notify_services
+  }
 
   exec { "php5enmod -s ALL mcrypt": }
 

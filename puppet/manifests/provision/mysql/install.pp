@@ -4,7 +4,7 @@
 class provision::mysql::install
 {
     $grants = {
-        'root@/*.*' => {
+        'root@%/*.*' => {
             ensure     => 'present',
             options    => ['GRANT'],
             privileges => ['ALL'],
@@ -23,4 +23,5 @@ class provision::mysql::install
             }
         }
     }
+
 }

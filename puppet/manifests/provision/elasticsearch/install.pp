@@ -23,7 +23,9 @@ class provision::elasticsearch::install
     }
 
     exec { 'install attachment-mapper':
-        command    => '/usr/share/elasticsearch/bin/plugin '
+        command    => '/usr/share/elasticsearch/bin/plugin  -install elasticsearch/elasticsearch-mapper-attachments/2.0.0',
+        require    => Class['elasticsearch'],
+        unless     => "[ -d /usr/share/elasticsearch/plugins/mapper-attachments ]"
     }
 
 }

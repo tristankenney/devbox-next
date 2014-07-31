@@ -24,5 +24,5 @@ if grep --quiet 'UseDNS no' /etc/ssh/sshd_config
 then
     echo 'DNS patched'
 else
-    sudo bash -c "echo 'UseDNS no' >> /etc/ssh/sshd_config"
+    sudo bash -c 'echo -e "\nUseDNS no" >> /etc/ssh/sshd_config'
 fi

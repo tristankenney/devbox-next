@@ -9,6 +9,8 @@ class provision::php::pools
     user   => 'vagrant',
     group  => 'vagrant',
     catch_workers_output => true,
-
+    listen_owner => 'www-data',
+    listen_group => 'www-data',
+    listen_mode  => 0660,
   }
 }

@@ -9,4 +9,5 @@ class bootstrap::update
                || /usr/bin/find /etc/apt -cnewer /tmp/apt.update \
                | /bin/grep . > /dev/null'",
   }
+
 }

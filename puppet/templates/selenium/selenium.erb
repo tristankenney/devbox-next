@@ -18,12 +18,18 @@ DAEMON_OPTS=" -client $MAX_MEMORY $STACK_SIZE -jar $JAR_FILE -log $LOG_FILE"
 
 NAME=selenium
 
+function restart_services {
+    service xvfb restart
+    service x11vnc restart
+}
+
 # TODO: Put together /etc/init.d/xvfb
 export DISPLAY=:99.0
 
 case "$1" in
 start)
 echo -n "Starting $DESC: "
+restart_services
 start-stop-daemon -c $RUN_AS --start --background --pidfile $PID_FILE --make-pidfile --exec $JAVA_BIN -- $DAEMON_OPTS
 echo "$NAME."
 ;;
@@ -38,6 +44,7 @@ restart|force-reload)
 echo -n "Restarting $DESC: "
 start-stop-daemon --stop --pidfile $PID_FILE
 sleep 1
+restart_services
 start-stop-daemon -c $RUN_AS --start --background --pidfile $PID_FILE --make-pidfile --exec $JAVA_BIN -- $DAEMON_OPTS
 echo "$NAME."
 ;;
