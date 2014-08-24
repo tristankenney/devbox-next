@@ -1,4 +1,5 @@
 server {
+    listen 81;
     listen 8081;
     server_name ~^(?<domain>[^\.]+\.[^\.]+);
     root        <%= @root %>/$domain;

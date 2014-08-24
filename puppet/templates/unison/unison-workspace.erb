@@ -1,0 +1,23 @@
+#!/bin/sh
+
+UNISON=/usr/bin/unison
+ARGS="/workspace /workspace-direct -batch"
+PIDFILE=/var/run/unison-workspace.pid
+
+case "$1" in
+  start)
+    start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --background --exec $UNISON -- $ARGS
+    ;;
+  stop)
+    start-stop-daemon --stop --quiet --pidfile $PIDFILE
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/unison-workspace {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

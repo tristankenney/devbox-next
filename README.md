@@ -10,6 +10,7 @@
 * [Nodejs](http://nodejs.org/)
 * [HHVM FastCGI](http://www.hhvm.com/)
 * [mailcatcher](http://mailcatcher.me/)
+* [Elasticsearch](http://www.elasticsearch.org/)
 * Vim
 * Mercurial
 * cURL
@@ -54,7 +55,7 @@ devbox-next comes with latest Trusty Tahr-supported PHP 5.5 version, plus the fo
 1. Grab and install the appropriate version of [Vagrant] (http://www.vagrantup.com/downloads.html) for your distro.
 
 2. Install vagrant-vbguest plugin. This will ensure your guest additions stay up-to-date.
-		
+
 		$ vagrant plugin install vagrant-vbguest
 
 3. Create a symlink from your working files to `/workspace`. e.g.:
@@ -116,8 +117,13 @@ To debug cli scripts, you will need [JIT debugging enabled within Eclipse](https
 	XDEBUG_CONFIG="idekey=ECLIPSE_DBGP" \
 	XDEBUG_SESSION_START=ECLIPSE_DBGP \
 	php \
-	-f script.php
+	-f /usr/local/bin/phpunit /workspace/integral/cruse/test/phpunit/induction/induction_INTEGRALCS2589_scormFilePocessorTest.php
 
+or for PHPUnit
+
+    phpunit -d xdebug.profiler_enable=on \
+            -d xdebug.idekey=ECLIPSE_DBGP \
+            XYZTestCase.php
 
 
 ### Web server
@@ -126,8 +132,8 @@ All sites symlinked above will be available at http://{url}:8080 for php-fpm and
 
 ## TODO
 
-* Elasticsearch
 * fix warnings / update import/* syntax
+* Fix XHProf
 
 ---
 

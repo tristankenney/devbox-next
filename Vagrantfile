@@ -8,20 +8,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.hostname = "devbox.luciditysoftware.com.au"
   config.vm.network :private_network, ip: "192.168.33.10"
-  config.vm.network :forwarded_port, host: 8082, guest: 8080
-  config.vm.network :forwarded_port, host: 8083, guest: 8081
+  config.vm.network :forwarded_port, host: 80, guest: 8080
+  config.vm.network :forwarded_port, host: 81, guest: 8081
   config.vm.network :forwarded_port, host: 33308, guest: 3306
   config.vm.network :forwarded_port, host: 9201, guest: 9200
   config.vm.network :forwarded_port, host: 4445, guest: 4444
   config.vm.network :forwarded_port, host: 5900, guest: 5900
-  # As per https://gist.github.com/fideloper/dab171a2aa646e86b782#comment-973847
-  # set :mount_options => ['actimeo=2'] to workaround NFS slow-update issue
-  # workspace, mounted via NFS with a short cache time
-  config.vm.synced_folder "/workspace", "/workspace", type: "rsync"
-  # normal VBOX shared folder, for tasks that require correct permissions (some npm installs, etc)
-  config.vm.synced_folder "/workspace", "/workspace-direct"
-  config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled",
-    type: "nfs"
+
+  config.vm.synced_folder "/workspace", "/workspace"
+  config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled"
+
   config.ssh.password = "vagrant"
 
   config.vm.provider :virtualbox do |vb|
