@@ -8,14 +8,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.hostname = "devbox.luciditysoftware.com.au"
   config.vm.network :private_network, ip: "192.168.33.10"
-  config.vm.network :forwarded_port, host: 80, guest: 8080
-  config.vm.network :forwarded_port, host: 81, guest: 8081
-  config.vm.network :forwarded_port, host: 33308, guest: 3306
-  config.vm.network :forwarded_port, host: 9201, guest: 9200
-  config.vm.network :forwarded_port, host: 4445, guest: 4444
+  config.vm.network :forwarded_port, host: 8080, guest: 80
+  config.vm.network :forwarded_port, host: 8081, guest: 81
+  config.vm.network :forwarded_port, host: 33306, guest: 3306
+  config.vm.network :forwarded_port, host: 9200, guest: 9200
+  config.vm.network :forwarded_port, host: 4444, guest: 4444
   config.vm.network :forwarded_port, host: 5900, guest: 5900
 
-  config.vm.synced_folder "/workspace", "/workspace"
+  config.vm.synced_folder "/workspace", "/workspace", type: "nfs"
   config.vm.synced_folder "/srv/sites-enabled", "/srv/sites-enabled"
 
   config.ssh.password = "vagrant"
@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     puppet.manifests_path    = "puppet/manifests"
     puppet.manifest_file     = "bootstrap.pp"
     puppet.hiera_config_path = "puppet/hiera.yaml"
-    #puppet.options = "--verbose --debug"
+    puppet.options = "--verbose --debug"
   end
 
   # Provision the box according to the main provision manifest

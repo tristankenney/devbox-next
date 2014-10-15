@@ -12,6 +12,8 @@ server {
     rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 last;
 
 
+
+
     #send file causes issues for static files in VirtualBox
     #http://jeremyfelt.com/code/2013/01/08/clear-nginx-cache-in-vagrant/
     sendfile off;
@@ -23,13 +25,17 @@ server {
         access_log    off;
     }
 
+    if (-f "${document_root}/integral/api/v2/${fastcgi_script_name}") {
+        rewrite ^/(api/v2.*)$ /integral/$1;
+    }
+
     location /api/v2/ {
-        try_files /api/v2/$uri $uri/ /api/v2/index.php?$args;
         include fastcgi_params;
         fastcgi_pass  unix:/var/run/php5-fpm.sock;
-        fastcgi_split_path_info ^/api/v2/(.+\.php)(/.+)$;
+        fastcgi_split_path_info /api/v2/(.+\.php)(/.+)$;
         fastcgi_intercept_errors on;
         fastcgi_index <%= @index %>;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param SERVER_NAME $domain;
         fastcgi_param PATH_INFO  $fastcgi_path_info;
     }
