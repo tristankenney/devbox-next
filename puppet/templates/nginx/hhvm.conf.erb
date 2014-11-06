@@ -1,9 +1,9 @@
 server {
     listen 81;
     listen 8081;
-    server_name ~^(?<domain>[^\.]+\.[^\.]+);
-    root        <%= @root %>/$domain;
-    index       <%= @index %> index.html;
+    server_name ~^(?<domain>.+)$;
+    root        /srv/sites-enabled/$domain;
+    index index.php index.html index.htm;
 
     client_max_body_size 100M;
     fastcgi_read_timeout 1800;
@@ -11,38 +11,59 @@ server {
     rewrite media/[^\/]+/(.+) /$1 last;
     rewrite "attachments/[0-9a-f]{32}/[0-9a-f]{8}/(.+)" /attachments/$1 last;
 
-
-    #send file causes issues for static files in VirtualBox
-    #http://jeremyfelt.com/code/2013/01/08/clear-nginx-cache-in-vagrant/
-    sendfile off;
-
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-        try_files     $uri $uri/ /index.php?$query_string;
-        expires       max;
-        log_not_found off;
-        access_log    off;
-    }
-
     location /api/v2/ {
-        try_files /api/v2/$uri $uri/ /api/v2/index.php?$args;
+
+        if (-f "${document_root}/api/v2/index.php") {
+            set $api_script_name "${document_root}/api/v2/index.php";
+        }
+
+        if (-f "${document_root}/integral/api/v2/index.php") {
+            set $api_script_name "${document_root}/integral/api/v2/index.php";
+        }
+
         include fastcgi_params;
-        fastcgi_pass  unix:/var/run/php5-fpm.sock;
-        fastcgi_split_path_info ^/api/v2/(.+\.php)(/.+)$;
-        fastcgi_intercept_errors on;
-        fastcgi_index <%= @index %>;
+        fastcgi_split_path_info  ^(.*/api/v2)(/.+)$;
+        fastcgi_pass  unix:/var/run/hhvm/server.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $api_script_name;
         fastcgi_param SERVER_NAME $domain;
-        fastcgi_param PATH_INFO  $fastcgi_path_info;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+
     }
 
-    location / {
-        try_files $uri $uri/ /<%= @index %>?$query_string;
-        location = /index.php {
-            try_files     $uri /index.php?$query_string =404;
-            include       fastcgi_params;
-            fastcgi_index <%= @index %>;
-            fastcgi_pass  127.0.0.1:9080;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param SERVER_NAME $domain;
+    location ~ /dashboard/(content|standalone|refresh|editwidget|reorderwidget|removewidget|imageprintwidget|copywidget|excelexportwidget|fetchdata|updatewidgetpreferences) {
+
+        if (-f "${document_root}/dashboard/index.php") {
+            set $api_script_name "${document_root}/dashboard/index.php";
         }
+
+        if (-f "${document_root}/integral/dashboard/index.php") {
+            set $api_script_name "${document_root}/integral/dashboard/index.php";
+        }
+
+        include fastcgi_params;
+        fastcgi_split_path_info  ^(.*/dashboard)(/.+)$;
+        fastcgi_pass  unix:/var/run/hhvm/server.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $api_script_name;
+        fastcgi_param SERVER_NAME $domain;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+
+    }
+
+    try_files     $uri $uri/ /integral/$uri /integral/$uri/ @dispatch;
+
+    location @dispatch {
+        rewrite ^/(.*)$ /index.php?$query_string;
+    }
+
+    location /index.php {
+        include fastcgi_params;
+        fastcgi_index index.php;
+        fastcgi_split_path_info  ^(.+\.php)(/.+)$;
+        fastcgi_pass  unix:/var/run/hhvm/server.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param SERVER_NAME $domain;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
     }
 }
